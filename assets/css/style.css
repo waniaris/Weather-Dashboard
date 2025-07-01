@@ -4,6 +4,7 @@
 body {
     font-family: 'Quicksand', sans-serif !important;
     background-color: #b3c7d8 !important;
+    background-image: url("windy_fullframe.jpg") !important;
     margin: 0;
     padding: 0;
     display: flex;
