@@ -28,7 +28,7 @@ body {
 
 /* Bootstrap overrides */
 .bg-image{
-    background-image: url('/assets/images/windy_fullframe.jpg');
+    background-image: url('/assets/images/backgrounds/50d.jpg');
 }
 
 .border-primary{
