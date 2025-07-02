@@ -17,10 +17,10 @@ const getCoordinates=()=>{
             console.log("City not found!");
             return null;
           }
-          const { lat, lon, name, country } = data[0];
+          const { lat, lon, name } = data[0];
           console.log("Coordinates:", lat, lon);
           console.log("City:", name);
-          return { latApi: lat, lonApi: lon, countryApi:country };
+          return { latApi: lat, lonApi: lon };
     })
     .catch(error => {
       console.error("Error finding location!", error);
@@ -43,7 +43,6 @@ function getWeatherDescription(lat, lon) {
     .then(data => {
       // Return the first weather description
       return data.weather[0].description;
-      // to do: to return temperature data { descApi: data.weather[0].description, tempApi: data.main.temp };
     })
     .catch(error => {
       console.error('Error getting weather description:', error);
@@ -51,39 +50,24 @@ function getWeatherDescription(lat, lon) {
     });
 }
 
-function toUpFirstLetter(str) {
-  return str
-    .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
-
-const descriptionResult = () =>
+const weatherResult = () =>
   getCoordinates()
     .then(coordinates => {
       if (coordinates) {
-        var descriptionResult = document.getElementById("descriptionResult");
-        var locationResult = document.getElementById("locationResult");
-        var temperatureResult = document.getElementById("temperatureResult");
-        var city = document.getElementById("city").value.trim().toUpperCase();
-        
-        //descriptionResult.textContent = getWeatherDescription(51.7520, 1.2577);
-        getWeatherDescription(coordinates.latApi, coordinates.lonApi, coordinates.countryApi)
+        var weatherResult = document.getElementById("weatherResult");
+        //weatherResult.textContent = getWeatherDescription(51.7520, 1.2577);
+        getWeatherDescription(coordinates.latApi, coordinates.lonApi)
           .then(description => {
-            descriptionResult.textContent = toUpFirstLetter(description) || 'No weather data available';
-            locationResult.textContent = toUpFirstLetter(city) + ", " + coordinates.countryApi;
-            temperatureResult.textContent = temperature;
+            weatherResult.textContent = description || 'No weather data available';
           });
 
-        //console.log(coordinates.latApi, coordinates.lonApi)
+        //console.log(coordinates.latApi, " yyy ", coordinates.lonApi)
       } else {
         console.log("Coordinates could not be found.")
       }
     })
 
-// const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
 
 
-document.getElementById("getWeather").addEventListener("click", descriptionResult);
+
+document.getElementById("getWeather").addEventListener("click", weatherResult);
