@@ -4,7 +4,7 @@
 body {
     font-family: 'Quicksand', sans-serif !important;
     background-color: #b3c7d8 !important;
-    background-image: url("windy_fullframe.jpg") !important;
+
     margin: 0;
     padding: 0;
     display: flex;
@@ -14,11 +14,9 @@ body {
 }
 
 .weather-dashboard {
-    background-color: #bdccd4;
+    background-color: #bdccd4cc;
     padding: 20px;
     border-radius: 10px;
-    border-width: 10px;
-    border-color: #007bff;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
     text-align: center;
     width: 300px;
@@ -27,6 +25,16 @@ body {
 
 .input-section {
     margin-bottom: 20px;
+}
+
+/* Bootstrap overrides */
+.bg-image{
+    background-image: url('/assets/images/windy_fullframe.jpg');
+}
+
+.border-primary{
+    border-width: 50px !important;
+    border-color: #34442d !important;
 }
 
 h1{
