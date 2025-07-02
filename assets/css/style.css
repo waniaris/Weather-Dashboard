@@ -4,7 +4,6 @@
 body {
     font-family: 'Quicksand', sans-serif !important;
     background-color: #b3c7d8 !important;
-
     margin: 0;
     padding: 0;
     display: flex;
@@ -33,8 +32,22 @@ body {
 }
 
 .border-primary{
+
+    border-radius: 60px;
+}
+
+.icon{
+    height: 80px;
+}
+
+.icon-box{
+    padding: 10px;
+    margin: 10px;
+    width: 110px;
+    height: 110px;
     border-width: 50px !important;
-    border-color: #34442d !important;
+    border-color: #ffffff !important;
+    background-color: #82949e;
 }
 
 h1{
