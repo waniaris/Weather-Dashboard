@@ -29,8 +29,8 @@ const getCoordinates=()=>{
     
 };
 
-// Call getWeather API when the button is clicked
-function getWeatherDescription(lat, lon) {
+// fetchWeatherData returns description and temperature
+function fetchWeatherData(lat, lon) {
   const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
 
   return fetch(weatherUrl)
@@ -41,9 +41,11 @@ function getWeatherDescription(lat, lon) {
       return response.json();
     })
     .then(data => {
-      // Return the first weather description
-      return data.weather[0].description;
-      // to do: to return temperature data { descApi: data.weather[0].description, tempApi: data.main.temp };
+      //modify fetchWeatherData to return 2 objects { description, temp } because we want both values.
+      return {
+        descApi: data.weather[0].description,
+        tempApi: data.main.temp
+      };
     })
     .catch(error => {
       console.error('Error getting weather description:', error);
@@ -59,8 +61,8 @@ function toUpFirstLetter(str) {
     .join(' ');
 }
 
-
-const descriptionResult = () =>
+// Renamed from descriptionResult to weatherResult
+const weatherResult = () =>
   getCoordinates()
     .then(coordinates => {
       if (coordinates) {
@@ -69,21 +71,17 @@ const descriptionResult = () =>
         var temperatureResult = document.getElementById("temperatureResult");
         var city = document.getElementById("city").value.trim().toUpperCase();
         
-        //descriptionResult.textContent = getWeatherDescription(51.7520, 1.2577);
-        getWeatherDescription(coordinates.latApi, coordinates.lonApi, coordinates.countryApi)
-          .then(description => {
-            descriptionResult.textContent = toUpFirstLetter(description) || 'No weather data available';
+        fetchWeatherData(coordinates.latApi, coordinates.lonApi, coordinates.countryApi)
+          .then(result => {
+            descriptionResult.textContent = toUpFirstLetter(result?.descApi) || 'No weather data available';
             locationResult.textContent = toUpFirstLetter(city) + ", " + coordinates.countryApi;
-            temperatureResult.textContent = temperature;
+            temperatureResult.textContent = result?.tempApi != null ? result.tempApi + " °C" : 'N/A';
           });
 
-        //console.log(coordinates.latApi, coordinates.lonApi)
       } else {
         console.log("Coordinates could not be found.")
       }
-    })
+    });
 
-// const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
-
-
-document.getElementById("getWeather").addEventListener("click", descriptionResult);
+// Updated event listener to use weatherResult
+document.getElementById("getWeather").addEventListener("click", weatherResult);
