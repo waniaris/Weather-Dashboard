@@ -1,5 +1,5 @@
 const API_KEY = "f23ee9deb4e1a7450f3157c44ed020e1";
-const forecastUrl = `https://openweathermap.org/forecast16`;
+//const forecastUrl = `https://openweathermap.org/forecast16`;
 
 // First, get the latitude and longitude for the city
 const getCoordinates=()=>{
@@ -9,8 +9,8 @@ const getCoordinates=()=>{
       return;
     }
     const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`;
-        console.log("Geo URL:", geoUrl);
-        return fetch(geoUrl) // <--- RETURN this promise
+        //console.log("Geo URL:", geoUrl);
+        return fetch(geoUrl) 
         .then(response => response.json())
         .then(data => {
           if (data.length === 0) {
@@ -44,7 +44,8 @@ function fetchWeatherData(lat, lon) {
       //modify fetchWeatherData to return 2 objects { description, temp } because we want both values.
       return {
         descApi: data.weather[0].description,
-        tempApi: data.main.temp
+        tempApi: data.main.temp,
+        iconApi: data.weather[0].icon
       };
     })
     .catch(error => {
@@ -52,6 +53,21 @@ function fetchWeatherData(lat, lon) {
       return null; 
     });
 }
+// var iconImg = document.getElementById("weatherIcon");
+
+// // if (result) {
+// //   descriptionResult.textContent = toUpFirstLetter(result.descApi);
+// // //   locationResult.textContent = toUpFirstLetter(city) + ", " + coordinates.countryApi;
+// // //   temperatureResult.textContent = `${result.tempApi} °C`;
+  
+// //   // Dynamically set icon
+  //iconImg.src = `assets/images/Icons/${result.iconApi}.png`;
+//   iconImg.alt = result.descApi;
+// } else {
+//   // Handle error
+//    iconImg.src = "";
+//   iconImg.alt = "No icon";
+// // }
 
 function toUpFirstLetter(str) {
   return str
@@ -65,23 +81,29 @@ function toUpFirstLetter(str) {
 const weatherResult = () =>
   getCoordinates()
     .then(coordinates => {
-      if (coordinates) {
-        var descriptionResult = document.getElementById("descriptionResult");
-        var locationResult = document.getElementById("locationResult");
-        var temperatureResult = document.getElementById("temperatureResult");
-        var city = document.getElementById("city").value.trim().toUpperCase();
-        
-        fetchWeatherData(coordinates.latApi, coordinates.lonApi, coordinates.countryApi)
-          .then(result => {
-            descriptionResult.textContent = toUpFirstLetter(result?.descApi) || 'No weather data available';
-            locationResult.textContent = toUpFirstLetter(city) + ", " + coordinates.countryApi;
-            temperatureResult.textContent = result?.tempApi != null ? result.tempApi + " °C" : 'N/A';
-          });
-
-      } else {
-        console.log("Coordinates could not be found.")
+      if (!coordinates) {
+        console.log("Coordinates Not Found!");
+        return;
       }
-    });
-
+       const city = document.getElementById("city").value.trim().toUpperCase(); 
+       var descriptionResult = document.getElementById("descriptionResult");
+       var locationResult = document.getElementById("locationResult");
+       var temperatureResult = document.getElementById("temperatureResult");
+       const iconImg = document.getElementById("weatherIcon");
+        
+        fetchWeatherData(coordinates.latApi, coordinates.lonApi)
+          .then(result => {
+            if (!result) return;
+            var iconImg = document.getElementById("weatherIcon");
+             var iconImg = document.getElementById("weatherIcon");
+            //update UI
+            descriptionResult.textContent = toUpFirstLetter(result.descApi);
+            locationResult.textContent = toUpFirstLetter(city) + ", " + coordinates.countryApi;
+            temperatureResult.textContent = `${result.tempApi} °C`;
+            iconImg.src = `assets/images/Icons/${result.iconApi}.png`;;
+             iconImg.alt = result.descApi;
+          
+          });
+        });
 // Updated event listener to use weatherResult
 document.getElementById("getWeather").addEventListener("click", weatherResult);
