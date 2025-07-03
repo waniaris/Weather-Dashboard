@@ -71,11 +71,45 @@ const weatherResult = () =>
         var temperatureResult = document.getElementById("temperatureResult");
         var city = document.getElementById("city").value.trim().toUpperCase();
         
+        const temps = [
+          document.getElementById("temperatureResult1"),
+          document.getElementById("temperatureResult2"),
+          document.getElementById("temperatureResult3"),
+          document.getElementById("temperatureResult4"),
+          document.getElementById("temperatureResult5")
+        ];
+
+        const descs = [
+          document.getElementById("descriptionResult1"),
+          document.getElementById("descriptionResult2"),
+          document.getElementById("descriptionResult3"),
+          document.getElementById("descriptionResult4"),
+          document.getElementById("descriptionResult5")
+        ];
+
         fetchWeatherData(coordinates.latApi, coordinates.lonApi, coordinates.countryApi)
           .then(result => {
             descriptionResult.textContent = toUpFirstLetter(result?.descApi) || 'No weather data available';
             locationResult.textContent = toUpFirstLetter(city) + ", " + coordinates.countryApi;
             temperatureResult.textContent = result?.tempApi != null ? result.tempApi + " °C" : 'N/A';
+          });
+
+        // fetchWeatherData5Day(coordinates.latApi, coordinates.lonApi)
+        //   .then(result => {
+        //     console.log(result)
+        //     })
+        //   .then(
+        //     t1.textContent(result[0].tempApi)      
+        //   );
+        
+        fetchWeatherData5Day(coordinates.latApi, coordinates.lonApi)
+          .then(result => {
+            if (!result) return;
+
+            result.forEach((day, i) => {
+              if (temps[i]) temps[i].textContent = `${Math.round(day.tempApi)} °C`;
+              if (descs[i]) descs[i].textContent = toUpFirstLetter(day.descApi);
+            });
           });
 
       } else {
@@ -85,3 +119,33 @@ const weatherResult = () =>
 
 // Updated event listener to use weatherResult
 document.getElementById("getWeather").addEventListener("click", weatherResult);
+
+function fetchWeatherData5Day(lat, lon) {
+  const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+
+  return fetch(forecastUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network Error');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Filter forecast entries for 12:00:00 each day
+      const dailyAtNoon = data.list.filter(entry =>
+        entry.dt_txt.includes("12:00:00")
+      ).slice(0, 5); // Get first 5 days only
+
+      // Map to simplified forecast objects
+      return dailyAtNoon.map(entry => ({
+        date: entry.dt_txt,
+        tempApi: entry.main.temp,
+        descApi: entry.weather[0].description
+      }));
+    })
+    .catch(error => {
+      console.error('Error fetching 5-day forecast:', error);
+      return null;
+    });
+}
+
