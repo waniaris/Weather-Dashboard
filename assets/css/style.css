@@ -6,12 +6,9 @@ body {
     background-color: #b3c7d8 !important;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
 }
-
+/* Main box */
 .weather-dashboard {
     background-color: #bdccd4cc;
     padding: 20px;
@@ -29,6 +26,7 @@ body {
 /* Bootstrap overrides */
 .bg-image{
     background-image: url('/assets/images/backgrounds/50d.jpg');
+    background-attachment: fixed;
 }
 
 .border-primary{
@@ -40,20 +38,33 @@ body {
     height: 80px;
 }
 
+.icon-small{
+    height: 55px
+}
+
 .icon-box{
     padding: 10px;
     margin: 10px;
-    width: 110px;
-    height: 110px;
     border-width: 50px !important;
     border-color: #ffffff !important;
     background-color: #82949e;
+}
+
+.icon-box-small{
+    width: 80px;
+    height: 80px;
+}
+
+.icon-box-big{
+    width: 110px;
+    height: 110px;
 }
 
 h1{
     color: #3666a5 !important;
 }
 
+/* Search bar */
 input {
     padding: 10px;
     width: 70%;
@@ -82,3 +93,4 @@ button:hover {
 .weather-result p {
     margin: 10px 0;
 }
+
