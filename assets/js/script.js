@@ -29,7 +29,7 @@ const getCoordinates=()=>{
     
 };
 
-// fetchWeatherData returns description and temperature
+// fetch Weather Data, returns date, description and temperature
 function fetchWeatherData(lat, lon) {
   const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
 
@@ -41,8 +41,9 @@ function fetchWeatherData(lat, lon) {
       return response.json();
     })
     .then(data => {
-      //modify fetchWeatherData to return 2 objects { description, temp } because we want both values.
+      //modify fetchWeatherData to return 3 objects { date, description, temp } because we want both values.
       return {
+        dateApi: data.dt_txt,
         descApi: data.weather[0].description,
         tempApi: data.main.temp
       };
@@ -61,7 +62,7 @@ function toUpFirstLetter(str) {
     .join(' ');
 }
 
-// Renamed from descriptionResult to weatherResult
+// Get weather result
 const weatherResult = () =>
   getCoordinates()
     .then(coordinates => {
@@ -71,6 +72,14 @@ const weatherResult = () =>
         var temperatureResult = document.getElementById("temperatureResult");
         var city = document.getElementById("city").value.trim().toUpperCase();
         
+        const dates = [
+          document.getElementById("dayResult1"),
+          document.getElementById("dayResult2"),
+          document.getElementById("dayResult3"),
+          document.getElementById("dayResult4"),
+          document.getElementById("dayResult5")
+        ];
+
         const temps = [
           document.getElementById("temperatureResult1"),
           document.getElementById("temperatureResult2"),
@@ -107,6 +116,14 @@ const weatherResult = () =>
             if (!result) return;
 
             result.forEach((day, i) => {
+              if (dates[i]) {
+                const forecastDate = new Date(day.date);
+                dates[i].textContent = forecastDate.toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  month: 'short',
+                  day: 'numeric'
+                });
+              }
               if (temps[i]) temps[i].textContent = `${Math.round(day.tempApi)} °C`;
               if (descs[i]) descs[i].textContent = toUpFirstLetter(day.descApi);
             });
@@ -116,9 +133,6 @@ const weatherResult = () =>
         console.log("Coordinates could not be found.")
       }
     });
-
-// Updated event listener to use weatherResult
-document.getElementById("getWeather").addEventListener("click", weatherResult);
 
 function fetchWeatherData5Day(lat, lon) {
   const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
@@ -149,3 +163,5 @@ function fetchWeatherData5Day(lat, lon) {
     });
 }
 
+// Updated event listener to use weatherResult
+document.getElementById("getWeather").addEventListener("click", weatherResult);
