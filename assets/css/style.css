@@ -6,9 +6,6 @@ body {
     background-color: #b3c7d8 !important;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
 }
 /* Main box */
@@ -29,6 +26,7 @@ body {
 /* Bootstrap overrides */
 .bg-image{
     background-image: url('/assets/images/backgrounds/50d.jpg');
+    background-attachment: fixed;
 }
 
 .border-primary{
