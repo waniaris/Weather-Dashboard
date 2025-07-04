@@ -45,7 +45,8 @@ function fetchWeatherData(lat, lon) {
       return {
         dateApi: data.dt_txt,
         descApi: data.weather[0].description,
-        tempApi: data.main.temp
+        tempApi: data.main.temp,
+        iconApi: data.weather[0].icon
       };
     })
     .catch(error => {
@@ -71,6 +72,9 @@ const weatherResult = () =>
         var locationResult = document.getElementById("locationResult");
         var temperatureResult = document.getElementById("temperatureResult");
         var city = document.getElementById("city").value.trim().toUpperCase();
+        const iconImg = document.getElementById("weatherIcon");
+        var bgImage = document.getElementsByClassName("bg-image");
+        
         
         const dates = [
           document.getElementById("dayResult1"),
@@ -96,11 +100,22 @@ const weatherResult = () =>
           document.getElementById("descriptionResult5")
         ];
 
+        const icons = [
+          document.getElementById("iconResult1"),
+          document.getElementById("iconResult2"),
+          document.getElementById("iconResult3"),
+          document.getElementById("iconResult4"),
+          document.getElementById("iconResult5")
+        ];
+
         fetchWeatherData(coordinates.latApi, coordinates.lonApi, coordinates.countryApi)
           .then(result => {
             descriptionResult.textContent = toUpFirstLetter(result?.descApi) || 'No weather data available';
             locationResult.textContent = toUpFirstLetter(city) + ", " + coordinates.countryApi;
             temperatureResult.textContent = result?.tempApi != null ? result.tempApi + " °C" : 'N/A';
+            iconImg.src = `assets/images/Icons/${result.iconApi}.png`;
+            iconImg.alt = result.descApi;
+            bgImage[0].style.background=`url('assets/images/backgrounds/${result.iconApi}.jpg')`;
           });
 
         // fetchWeatherData5Day(coordinates.latApi, coordinates.lonApi)
@@ -117,15 +132,17 @@ const weatherResult = () =>
 
             result.forEach((day, i) => {
               if (dates[i]) {
+
                 const forecastDate = new Date(day.date);
-                dates[i].textContent = forecastDate.toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  month: 'short',
-                  day: 'numeric'
-                });
+                const weekday = forecastDate.toLocaleDateString('en-US', { weekday: 'long' });
+                const monthDay = forecastDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                dates[i].innerHTML = `${weekday}<br>${monthDay}`;
+                
               }
+
               if (temps[i]) temps[i].textContent = `${Math.round(day.tempApi)} °C`;
               if (descs[i]) descs[i].textContent = toUpFirstLetter(day.descApi);
+              if (icons[i]) icons[i].src = `assets/images/Icons/${day.iconApi}.png`;
             });
           });
 
@@ -154,7 +171,8 @@ function fetchWeatherData5Day(lat, lon) {
       return dailyAtNoon.map(entry => ({
         date: entry.dt_txt,
         tempApi: entry.main.temp,
-        descApi: entry.weather[0].description
+        descApi: entry.weather[0].description,
+        iconApi: entry.weather[0].icon
       }));
     })
     .catch(error => {
