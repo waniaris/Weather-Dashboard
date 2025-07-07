@@ -6,7 +6,10 @@ const getCoordinates=()=>{
     const city=document.getElementById("city").value;
     if (!city) {
       console.log("Please enter a city name");
-      return;
+      const errorMessage = document.getElementById("errorMessage");
+      errorMessage.textContent = "Please enter a city name";
+      errorMessage.classList.remove("d-none");
+      return Promise.resolve(null);
     }
     const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`;
         console.log("Geo URL:", geoUrl);
@@ -16,7 +19,10 @@ const getCoordinates=()=>{
           if (data.length === 0) {
             console.log("City not found!");
             return null;
-          }
+          }          
+          const errorMessage = document.getElementById("errorMessage");
+          errorMessage.classList.add("d-none");
+
           const { lat, lon, name, country } = data[0];
           console.log("Coordinates:", lat, lon);
           console.log("City:", name);
@@ -148,7 +154,17 @@ const weatherResult = () =>
 
       } else {
         console.log("Coordinates could not be found.")
+        const errorMessage = document.getElementById("errorMessage");
+        errorMessage.textContent = "City not found. Please enter a valid city.";
+        errorMessage.classList.remove("d-none");
       }
+    })
+    .catch(error => {
+      console.error("Fetch error:", error);
+      const errorMessage = document.getElementById("errorMessage");
+      errorMessage.textContent = "City not found. Please enter a valid city.";
+      errorMessage.classList.remove("d-none");
+      return null; 
     });
 
 function fetchWeatherData5Day(lat, lon) {
