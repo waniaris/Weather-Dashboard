@@ -121,7 +121,7 @@ const weatherResult = () =>
             temperatureResult.textContent = result?.tempApi != null ? result.tempApi + " °C" : 'N/A';
             iconImg.src = `assets/images/Icons/${result.iconApi}.png`;
             iconImg.alt = result.descApi;
-            bgImage[0].style.background=`url('assets/images/backgrounds/${result.iconApi}.jpg')`;
+            bgImage[0].style.background=`url('assets/images/Backgrounds/${result.iconApi}.jpg')`;
           });
 
         // fetchWeatherData5Day(coordinates.latApi, coordinates.lonApi)
